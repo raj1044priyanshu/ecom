@@ -131,7 +131,7 @@ const AdminOrdersPage = () => {
                   filteredOrders.map((order) => {
                     const cfg = STATUS_CONFIG[order.orderStatus] || STATUS_CONFIG.Pending;
                     const isExpanded = expandedId === order._id;
-                    const isLocked = order.orderStatus === 'Delivered' || order.orderStatus === 'Cancelled';
+                    const isLocked = updatingId === order._id; // Only lock when actually updating
 
                     return (
                       <>
