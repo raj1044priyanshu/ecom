@@ -1,6 +1,7 @@
 import Order from '../models/Order.js';
 import Cart from '../models/Cart.js';
-import { sendOrderConfirmationEmail } from '../utils/emailService.js';
+import User from '../models/User.js';
+import { sendOrderConfirmationEmail, sendShippingUpdateEmail } from '../utils/emailService.js';
 
 // @desc    Create new order directly
 export const createOrder = async (req, res, next) => {
@@ -85,12 +86,22 @@ export const getAllOrders = async (req, res, next) => {
 // @desc    Update order status (admin)
 export const updateOrderStatus = async (req, res, next) => {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id).populate('user', 'email name');
     if (!order) return res.status(404).json({ success: false, message: 'Order not found.' });
 
-    order.orderStatus = req.body.status;
-    if (req.body.status === 'Delivered') order.deliveredAt = new Date();
+    const newStatus = req.body.status;
+    order.orderStatus = newStatus;
+    if (newStatus === 'Delivered') order.deliveredAt = new Date();
     await order.save();
+
+    const notifyStatuses = ['Shipped', 'Out for Delivery', 'Delivered'];
+    if (notifyStatuses.includes(newStatus) && order.user?.email) {
+      try {
+        await sendShippingUpdateEmail(order.user.email, order, order.user.name, newStatus);
+      } catch (emailErr) {
+        console.error('Shipping email error:', emailErr.message);
+      }
+    }
 
     res.status(200).json({ success: true, order });
   } catch (error) {

@@ -1,58 +1,70 @@
-A full-stack e-commerce application built with the MERN stack (MongoDB, Express, React, Node.js), featuring completely automated AI product recommendations using Google Gemini and secure authentication.
+# Ecom.
+
+A full-stack e-commerce web application built with the **MERN stack** (MongoDB, Express, React, Node.js).
+
+## Features
+
+- 🛍️ Product catalog with category filters, search, and pagination
+- 🔐 JWT authentication + Google OAuth 2.0
+- 🤳 User profile management with saved addresses
+- 🛒 Persistent cart with real-time updates
+- 📦 Order management with live tracking status
+- 📩 Transactional emails (Order confirmed, Shipped, Delivered)
+- 🧑‍💼 Full admin dashboard (products, orders, users)
+- ☁️ Cloudinary image uploads
+- 💬 24/7 Customer support chat
+
+## Tech Stack
+
+### Frontend
+- **React 18** + **Vite**
+- **Redux Toolkit** (global state)
+- **React Query** (server state & caching)
+- **Tailwind CSS v4**
+- **React Hook Form** + **Zod** (form validation)
+
+### Backend
+- **Node.js** + **Express.js**
+- **MongoDB** + **Mongoose**
+- **JWT** (access + refresh tokens, HTTP-only cookies)
+- **Nodemailer** (transactional emails via Gmail SMTP)
+- **Cloudinary** (image hosting)
+- **Helmet, CORS, Rate-limiting** (security)
 
 ## Project Structure
 
-This is a monorepo containing both the frontend and backend applications.
+```
+/
+├── client/     # React frontend (Vite)
+└── server/     # Node.js backend (Express)
+```
 
-- `/client` - React frontend application (Vite + Tailwind CSS + Redux Toolkit)
-- `/server` - Node.js backend API (Express + MongoDB + Mongoose)
+## Setup
 
-## Prerequisites
+### Prerequisites
 
-Before running the application, you must set up the following external services:
+- Node.js 18+
+- MongoDB Atlas account
+- Google OAuth credentials
+- Cloudinary account
+- Gmail account (for email sending)
 
-1. **MongoDB Atlas Database** (Free Tier available)
-2. **Google OAuth** Client ID & Secret
-3. **Cloudinary** Account (for image uploads)
-4. **Google Gemini API Key** (Free Tier available from Google AI Studio)
-5. App password for a **Gmail account** (for Nodemailer)
-
-> **Important:** Detailed setup instructions for these prerequisites are documented in the `implementation_plan.md` artifact included in your `.gemini` folder directory.
-
-## Environment Variables
-
-You need to create `.env` files in both the `client` and `server` directories.
-Templates for these files are provided as `.env.example`.
-
-### Server Setup
+### Server
 
 ```bash
 cd server
 cp .env.example .env
-# Open server/.env and fill in all the required credentials
+# Fill in .env with your credentials
 npm install
 npm run dev
 ```
-The backend server will start on `http://localhost:5000`.
 
-### Client Setup
+### Client
 
 ```bash
 cd client
-cp .env.example .env
-# Open client/.env and fill in your API URL
 npm install
 npm run dev
 ```
-The frontend development server will start on `http://localhost:5173`.
 
-## Architecture Details
-
-- **Authentication:** JWT stored in HTTP-only secure cookies + Google OAuth integration.
-- **State Management:** Redux Toolkit for global user/cart state, React Query for server-side state (caching product lists, handling pagination).
-- **Styling:** Tailwind CSS v4 featuring modern glassmorphism UI elements, microinteractions, and fully responsive layouts.
-- **Performance:** Backend implements Redis/node-cache for API responses, rate-limiting, Helmet security headers, compression, and request validation.
-
-Enjoy shopping intelligently!
-# ecom
-# ecom
+App runs at `http://localhost:5173`, API at `http://localhost:5000`.

@@ -120,28 +120,65 @@ export const getSearchSuggestions = async (req, res, next) => {
 
 export const chatSupport = async (req, res, next) => {
   try {
-    const { message, history } = req.body;
-    
-    // Format history for Gemini API
-    const formattedHistory = history ? history.slice(0, -1).map(msg => ({
-      role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }]
-    })) : [];
+    const { message, history, userOrderId } = req.body;
 
-    // System instruction injected as the first context
-    formattedHistory.unshift({
+    // Fetch live product catalog snapshot for context
+    const products = await Product.find({ stock: { $gt: 0 } })
+      .select('name category price discountPrice brand')
+      .limit(30)
+      .lean();
+
+    const productList = products.map(p =>
+      `- ${p.name} (${p.category}) - ₹${p.discountPrice || p.price}${p.brand ? `, by ${p.brand}` : ''}`
+    ).join('\n');
+
+    const systemPrompt = `You are a friendly and professional customer support agent for "Ecom.", a modern Indian e-commerce store.
+
+Store Policies:
+- Free shipping on orders over ₹500. Orders below ₹500 have a flat ₹30 delivery charge.
+- 7-day hassle-free returns on all products.
+- Payments are accepted via UPI, debit/credit cards, and net banking.
+- Orders can be cancelled within 24 hours of placing (before shipping).
+- Customers can track their orders on the "My Orders" page after logging in.
+- Customer support is available 24/7 via this chat.
+
+Current available products (for reference):
+${productList}
+
+Guidelines:
+- Be warm, concise, and helpful. Do NOT use the word "AI" at all.
+- If asked about a product not in the list, say you'll check and to visit the Products page.
+- If you can't fully answer, always offer to escalate to the support team.
+- Keep responses under 4 short sentences.
+- Do not mention that you are powered by any AI platform.`;
+
+    const formattedHistory = [];
+
+    // Add system primer
+    formattedHistory.push({
       role: 'user',
-      parts: [{ text: "System Prompt: You are a helpful, professional AI customer support agent for 'Ecom.', a modern e-commerce store. Answer queries concisely. If asked about policies: we offer 7-day returns, free shipping over ₹500 (₹30 otherwise), and 24/7 support. Keep answers under 3 short sentences." }]
+      parts: [{ text: systemPrompt }]
     });
     formattedHistory.push({
       role: 'model',
-      parts: [{ text: "Understood. I will act exactly as the Ecom. support agent." }]
+      parts: [{ text: `Hello! I'm the Ecom. support team. How can I help you today? 😊` }]
     });
+
+    // Add real chat history
+    if (history && history.length > 1) {
+      const chatHistory = history.slice(1, -1);
+      chatHistory.forEach(msg => {
+        formattedHistory.push({
+          role: msg.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: msg.content }]
+        });
+      });
+    }
 
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const chat = model.startChat({
       history: formattedHistory,
-      generationConfig: { maxOutputTokens: 150, temperature: 0.7 },
+      generationConfig: { maxOutputTokens: 200, temperature: 0.6 },
     });
 
     const result = await chat.sendMessage(message);
@@ -149,7 +186,7 @@ export const chatSupport = async (req, res, next) => {
 
     res.json({ success: true, response });
   } catch (error) {
-    console.error('AI Chat Error:', error);
-    res.status(500).json({ success: false, message: 'AI Chat failed' });
+    console.error('Chat Error:', error);
+    res.status(500).json({ success: false, message: 'Support chat is temporarily unavailable. Please try again shortly.' });
   }
 };
