@@ -23,6 +23,9 @@ import errorHandler from './middleware/errorMiddleware.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust proxy for secure cookies on Render/Vercel
+app.set('trust proxy', 1);
+
 // Connect DB
 connectDB();
 

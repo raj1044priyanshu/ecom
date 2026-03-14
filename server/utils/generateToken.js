@@ -16,8 +16,8 @@ export const setTokenCookies = (res, accessToken, refreshToken) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const cookieOptions = {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: 'lax',
+    secure: true, // Always true for sameSite: 'none'
+    sameSite: isProduction ? 'none' : 'lax',
   };
 
   res.cookie('accessToken', accessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
