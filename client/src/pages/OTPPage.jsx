@@ -121,7 +121,7 @@ const OTPPage = () => {
           <h2 className="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight">
             Verify your email
           </h2>
-          <p className="mt-4 text-sm text-gray-600">
+          <p className="mt-4 text-sm text-gray-800">
             We've sent a 6-digit code to<br/>
             <span className="font-semibold text-gray-900">{email}</span>
           </p>
@@ -157,7 +157,7 @@ const OTPPage = () => {
 
         <div className="mt-6 text-sm">
           {timeLeft > 0 ? (
-            <p className="text-gray-500">
+            <p className="text-gray-700">
               Code expires in <span className="font-semibold text-primary-600">{minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span>
             </p>
           ) : (

@@ -32,6 +32,17 @@ export const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
 });
 
+// CSV-only multer for bulk import
+const csvFilter = (req, file, cb) => {
+  const allowed = ['text/csv', 'application/vnd.ms-excel', 'application/csv', 'text/plain'];
+  if (allowed.includes(file.mimetype) || file.originalname.endsWith('.csv')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only CSV files are accepted for bulk import'), false);
+  }
+};
+export const uploadCSV = multer({ storage, fileFilter: csvFilter, limits: { fileSize: 50 * 1024 * 1024 } }); // 50MB limit
+
 /**
  * Upload a single buffer to Cloudinary via upload_stream.
  * Returns a Promise<{ public_id, url }>.

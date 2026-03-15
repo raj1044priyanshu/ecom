@@ -1,7 +1,7 @@
 import Order from '../models/Order.js';
 import Cart from '../models/Cart.js';
 import User from '../models/User.js';
-import { sendOrderConfirmationEmail, sendShippingUpdateEmail } from '../utils/emailService.js';
+import { sendOrderConfirmationEmail, sendOrderStatusEmail } from '../utils/emailService.js';
 
 // @desc    Create new order directly
 export const createOrder = async (req, res, next) => {
@@ -94,20 +94,14 @@ export const updateOrderStatus = async (req, res, next) => {
     if (newStatus === 'Delivered') order.deliveredAt = new Date();
     await order.save();
 
-    const notifyStatuses = ['Shipped', 'Out for Delivery', 'Delivered'];
-    if (notifyStatuses.includes(newStatus)) {
-      try {
-        // Re-populate user if needed for the email
-        if (!order.user || !order.user.email) {
-          await order.populate('user', 'email name');
-        }
-
-        if (order.user && order.user.email) {
-          await sendShippingUpdateEmail(order.user.email, order, order.user.name, newStatus);
-        }
-      } catch (emailErr) {
-        console.error('Shipping email error:', emailErr.message);
+    // Send email for ALL status changes
+    try {
+      if (order.user && order.user.email) {
+        await sendOrderStatusEmail(order.user.email, order, order.user.name, newStatus);
       }
+    } catch (emailErr) {
+      console.error('Order status email error:', emailErr.message);
+      // Don't fail the request if email fails
     }
 
     res.status(200).json({ success: true, order });

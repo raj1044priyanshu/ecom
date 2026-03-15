@@ -4,24 +4,34 @@ import { useSelector } from 'react-redux';
 import axiosInstance from '../api/axiosInstance.js';
 import ProductCard from '../components/product/ProductCard.jsx';
 import Spinner from '../components/common/Spinner.jsx';
-import { FiArrowRight, FiShield, FiTruck, FiRefreshCcw, FiHeadphones } from 'react-icons/fi';
+import {
+  ArrowRight, Shield, Truck, RotateCcw, Headphones,
+  Monitor, Shirt, Home, Dumbbell, BookOpen, Sparkles,
+  Star, BadgeCheck, Package, Zap
+} from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 
 const CATEGORIES = [
-  { name: 'Electronics', emoji: '💻', color: 'bg-blue-50 text-blue-700 hover:bg-blue-100' },
-  { name: 'Fashion', emoji: '👗', color: 'bg-pink-50 text-pink-700 hover:bg-pink-100' },
-  { name: 'Home & Kitchen', emoji: '🏡', color: 'bg-amber-50 text-amber-700 hover:bg-amber-100' },
-  { name: 'Sports', emoji: '⚽', color: 'bg-green-50 text-green-700 hover:bg-green-100' },
-  { name: 'Books', emoji: '📚', color: 'bg-purple-50 text-purple-700 hover:bg-purple-100' },
-  { name: 'Beauty', emoji: '💄', color: 'bg-rose-50 text-rose-700 hover:bg-rose-100' },
+  { name: 'Electronics', Icon: Monitor, bg: '#e8f4fd', color: '#1d6fa4' },
+  { name: 'Fashion',     Icon: Shirt,   bg: '#fdf0f8', color: '#a4197c' },
+  { name: 'Home & Kitchen', Icon: Home, bg: '#fdf6e8', color: '#a46b19' },
+  { name: 'Sports',      Icon: Dumbbell,bg: '#edf9f2', color: '#1a804a' },
+  { name: 'Books',       Icon: BookOpen,bg: '#f0edfb', color: '#5a30a4' },
+  { name: 'Beauty',      Icon: Sparkles,bg: '#fceef0', color: '#a4192b' },
 ];
 
 const TRUST_BADGES = [
-  { icon: FiTruck, title: 'Free Delivery', desc: 'On all orders above ₹499' },
-  { icon: FiRefreshCcw, title: 'Easy Returns', desc: '7-day hassle-free returns' },
-  { icon: FiShield, title: 'Secure Payments', desc: '100% safe & encrypted' },
-  { icon: FiHeadphones, title: '24/7 Support', desc: 'Dedicated customer care' },
+  { icon: Truck,      title: 'Free Delivery',    desc: 'On all orders above ₹499' },
+  { icon: RotateCcw,  title: 'Easy Returns',     desc: '7-day hassle-free returns' },
+  { icon: Shield,     title: 'Secure Payments',  desc: '100% safe & encrypted' },
+  { icon: Headphones, title: '24/7 Support',     desc: 'Dedicated customer care' },
+];
+
+const FEATURES = [
+  { icon: Zap,     title: 'Lightning Fast', desc: 'Orders shipped within 24 hours' },
+  { icon: Package, title: 'Premium Packing', desc: 'Every item packed with care' },
+  { icon: Star,    title: 'Curated Quality', desc: 'Handpicked products you\'ll love' },
 ];
 
 const HomePage = () => {
@@ -42,95 +52,125 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-surface-50">
       <Helmet>
         <title>Ecom. | Your Favourite Online Store</title>
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-indigo-50 -z-10" />
-        
-        <div className="container-custom pt-16 pb-24 lg:pt-32 lg:pb-40">
+      {/* ─── HERO ─── */}
+      <section className="relative overflow-hidden bg-surface-100">
+        {/* Decorative blobs */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-40 blur-3xl pointer-events-none"
+          style={{ background: 'radial-gradient(circle, #a7f3d0 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-30 blur-3xl pointer-events-none"
+          style={{ background: 'radial-gradient(circle, #fde68a 0%, transparent 70%)', transform: 'translate(-30%, 30%)' }} />
+
+        <div className="container-custom pt-20 pb-24 lg:pt-32 lg:pb-40 relative">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-2xl"
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="max-w-xl"
             >
-              <span className="inline-block py-1 px-3 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold tracking-wide uppercase mb-6">
-                New Collection 2025 🎉
+              <span className="inline-flex items-center gap-2 text-primary-700 font-semibold text-sm mb-6 py-1.5 px-4 rounded-full border border-primary-200 bg-primary-50">
+                <BadgeCheck className="h-4 w-4" strokeWidth={2.5} />
+                New Collection 2025
               </span>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight mb-6">
-                Shop Smarter,{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-500">
-                  Live Better.
+
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6">
+                Shop What{' '}
+                <span className="relative inline-block">
+                  <span className="relative z-10 text-primary-600">You Love</span>
+                  <span className="absolute -bottom-1 left-0 right-0 h-3 rounded-full opacity-30 -z-10 bg-primary-400" />
                 </span>
+                {' '}Delivered Fast.
               </h1>
-              <p className="text-lg text-gray-600 mb-10 leading-relaxed max-w-xl">
-                Discover thousands of products across every category — fashion, electronics, home, and more. Fast delivery, easy returns, and unbeatable prices.
+
+              <p className="text-lg text-gray-700 mb-10 leading-relaxed">
+                Discover thousands of carefully curated products — fashion, electronics, home & more.
+                Fast delivery, easy returns, and unbeatable prices.
               </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/products" className="btn-primary px-8 py-4 text-lg">
-                  Shop Now
-                  <FiArrowRight className="ml-2 h-5 w-5" />
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link to="/products"
+                  className="inline-flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-bold px-8 py-4 rounded-xl text-base transition-all shadow-lg shadow-primary-200 hover:shadow-primary-300 hover:-translate-y-0.5 active:scale-[0.98]">
+                  Shop Now <ArrowRight className="h-5 w-5" />
                 </Link>
-                <button onClick={scrollToFeatured} className="btn-secondary px-8 py-4 text-lg bg-transparent">
+                <button onClick={scrollToFeatured}
+                  className="inline-flex items-center justify-center font-semibold text-gray-800 px-8 py-4 rounded-xl text-base border border-gray-200 hover:bg-white hover:border-gray-300 transition-all bg-white/50">
                   View Featured
                 </button>
               </div>
+
+              {/* Stats row */}
+              <div className="flex gap-8 mt-10 pt-8 border-t border-gray-100">
+                {[['10K+', 'Products'], ['50K+', 'Customers'], ['4.9', 'Rating']].map(([val, lbl]) => (
+                  <div key={lbl}>
+                    <p className="text-2xl font-extrabold text-gray-900">{val}</p>
+                    <p className="text-sm text-gray-600 mt-0.5">{lbl}</p>
+                  </div>
+                ))}
+              </div>
             </motion.div>
-            
-            {/* Hero Image */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
+
+            {/* Hero visual */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="relative hidden lg:block"
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary-200 to-indigo-100 rounded-[3rem] transform rotate-3 scale-105" />
-              <img 
-                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
-                alt="Shopping" 
-                className="relative z-10 rounded-[3rem] shadow-2xl object-cover h-[540px] w-full"
-              />
-              
-              {/* Floating badges */}
-              <div className="absolute top-12 -left-8 z-20 glass p-4 rounded-xl shadow-lg flex items-center gap-3 animate-bounce shadow-primary-500/10">
-                <div className="bg-green-100 p-2 rounded-full">⭐</div>
+              {/* Image */}
+              <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl" style={{ height: '520px' }}>
+                <img
+                  src="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                  alt="Shopping"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-400/10 to-transparent" />
+              </div>
+
+              {/* Floating card — Top Rated */}
+              <div className="absolute -left-8 top-12 bg-white rounded-2xl shadow-xl border border-gray-100 p-4 flex items-center gap-3 z-10">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-amber-100">
+                  <Star className="h-5 w-5 fill-amber-500 stroke-amber-500" />
+                </div>
                 <div>
-                  <div className="text-xs text-gray-500">Top Rated</div>
-                  <div className="font-bold text-gray-900">Electronics</div>
+                  <p className="text-xs text-gray-600 font-medium">Top Rated</p>
+                  <p className="text-sm font-bold text-gray-900">Electronics</p>
                 </div>
               </div>
-              <div className="absolute bottom-16 -right-6 z-20 glass p-4 rounded-xl shadow-lg flex items-center gap-3">
-                <div className="bg-primary-100 p-2 rounded-full text-lg">🚚</div>
+
+              {/* Floating card — Free Delivery */}
+              <div className="absolute -right-6 bottom-16 bg-white rounded-2xl shadow-xl border border-gray-100 p-4 flex items-center gap-3 z-10">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-primary-100">
+                  <Truck className="h-5 w-5 text-primary-600" strokeWidth={2} />
+                </div>
                 <div>
-                  <div className="text-xs text-gray-500">Free Delivery</div>
-                  <div className="font-bold text-gray-900">On ₹499+</div>
+                  <p className="text-xs text-gray-600 font-medium">Free Delivery</p>
+                  <p className="text-sm font-bold text-gray-900">On ₹499+</p>
                 </div>
               </div>
             </motion.div>
-            
+
           </div>
         </div>
       </section>
 
-      {/* Trust Badges */}
-      <section className="bg-white border-y border-gray-100">
+      {/* ─── TRUST BADGES ─── */}
+      <section className="bg-surface-50 border-y border-surface-300">
         <div className="container-custom py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {TRUST_BADGES.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Icon className="h-6 w-6 text-primary-600" />
+              <div key={title} className="flex items-center gap-3 p-4 rounded-2xl hover:bg-surface-100 transition-colors">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary-50">
+                  <Icon className="h-5 w-5 text-primary-600" strokeWidth={2} />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900 text-sm">{title}</p>
-                  <p className="text-xs text-gray-500">{desc}</p>
+                  <p className="text-xs text-gray-600 mt-0.5">{desc}</p>
                 </div>
               </div>
             ))}
@@ -138,38 +178,59 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="py-16 bg-gray-50">
+      {/* ─── CATEGORIES ─── */}
+      <section className="py-16 bg-surface-100">
         <div className="container-custom">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Shop by Category</h2>
-            <p className="text-gray-500 mt-2">Find exactly what you're looking for</p>
+            <h2 className="text-3xl font-bold text-gray-900">Shop by Category</h2>
+            <p className="text-gray-600 mt-2 text-sm">Find exactly what you're looking for</p>
           </div>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
-            {CATEGORIES.map(({ name, emoji, color }) => (
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+            {CATEGORIES.map(({ name, Icon, bg, color }) => (
               <button
                 key={name}
                 onClick={() => navigate(`/products?category=${encodeURIComponent(name)}`)}
-                className={`${color} rounded-2xl p-4 text-center transition-all hover:shadow-md hover:-translate-y-1 duration-200 flex flex-col items-center gap-2`}
+                className="flex flex-col items-center gap-2.5 p-4 rounded-2xl transition-all hover:-translate-y-1 hover:shadow-md duration-200 border border-transparent hover:border-gray-100 bg-white"
               >
-                <span className="text-3xl">{emoji}</span>
-                <span className="text-xs font-semibold tracking-wide">{name}</span>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: bg }}>
+                  <Icon className="h-5 w-5" style={{ color }} strokeWidth={1.75} />
+                </div>
+                <span className="text-xs font-semibold text-gray-800 leading-tight text-center">{name}</span>
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section id="featured" className="py-20 bg-white">
+      {/* ─── FEATURES STRIP ─── */}
+      <section className="py-12 bg-white border-y border-surface-300">
         <div className="container-custom">
-          <div className="flex justify-between items-end mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {FEATURES.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="flex items-start gap-4 p-6 rounded-2xl bg-surface-50 border border-surface-300">
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary-100 text-primary-600">
+                  <Icon className="h-5 w-5" strokeWidth={2} />
+                </div>
+                <div>
+                  <p className="font-bold text-gray-900 text-sm">{title}</p>
+                  <p className="text-xs mt-1 text-gray-700">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FEATURED PRODUCTS ─── */}
+      <section id="featured" className="py-20 bg-surface-50">
+        <div className="container-custom">
+          <div className="flex justify-between items-end mb-10">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Featured Collection</h2>
-              <p className="mt-2 text-gray-500">Handpicked premium products just for you</p>
+              <h2 className="text-3xl font-bold text-gray-900">Featured Collection</h2>
+              <p className="mt-1.5 text-gray-600 text-sm">Handpicked premium products just for you</p>
             </div>
-            <Link to="/products" className="hidden sm:inline-flex items-center font-medium text-primary-600 hover:text-primary-700 gap-1">
-              View all <FiArrowRight className="h-5 w-5" />
+            <Link to="/products" className="hidden sm:inline-flex items-center gap-1.5 font-semibold text-primary-600 hover:text-primary-700 text-sm">
+              View all <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -178,39 +239,49 @@ const HomePage = () => {
               <Spinner className="h-10 w-10 text-primary-600" />
             </div>
           ) : data?.products?.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {data.products.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 bg-gray-50 rounded-2xl border border-gray-100">
-              <p className="text-gray-500">No featured products found.</p>
+            <div className="text-center py-20 rounded-2xl border border-gray-100">
+              <p className="text-gray-600">No featured products found.</p>
             </div>
           )}
-          
-          <div className="mt-10 text-center sm:hidden">
+
+          <div className="mt-8 text-center sm:hidden">
             <Link to="/products" className="btn-secondary w-full py-3">View all products</Link>
           </div>
         </div>
       </section>
 
-      {/* CTA — only show when NOT logged in */}
+      {/* ─── CTA ─── */}
       {!isAuthenticated && (
-        <section className="py-24 bg-gray-50">
+        <section className="py-20 bg-surface-100">
           <div className="container-custom">
-            <div className="bg-gradient-to-br from-primary-600 to-indigo-600 rounded-3xl p-8 md:p-16 text-center shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-primary-500 rounded-full opacity-30 blur-3xl" />
-              <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-indigo-700 rounded-full opacity-30 blur-3xl" />
+            <div className="rounded-3xl overflow-hidden relative bg-white border border-surface-300 shadow-xl shadow-surface-200/50">
+              {/* Green glow */}
+              <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none bg-primary-400"
+                style={{ transform: 'translate(30%, -30%)' }} />
+              <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none bg-primary-300"
+                style={{ transform: 'translate(-30%, 30%)' }} />
               
-              <div className="relative z-10 max-w-2xl mx-auto text-white">
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4 tracking-tight">Join Ecom. Today</h2>
-                <p className="text-primary-100 text-lg mb-8">
-                  Create a free account and get exclusive deals, faster checkout, and order tracking.
+              <div className="relative z-10 px-8 py-16 md:px-16 text-center max-w-2xl mx-auto">
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Join Ecom. Today</h2>
+                <p className="text-base mb-8 text-gray-700">
+                  Create a free account and unlock exclusive deals, faster checkout, and real-time order tracking.
                 </p>
-                <Link to="/register" className="btn bg-white text-primary-700 hover:bg-gray-50 px-8 py-4 text-lg shadow-md font-bold hover:shadow-lg transition-all transform hover:-translate-y-1">
-                  Create Free Account
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link to="/register"
+                    className="inline-flex items-center gap-2 justify-center bg-primary-500 hover:bg-primary-600 text-white font-bold px-8 py-4 rounded-xl text-base shadow-lg shadow-primary-200 transition-all hover:-translate-y-0.5">
+                    Create Free Account <ArrowRight className="h-5 w-5" />
+                  </Link>
+                  <Link to="/products"
+                    className="inline-flex items-center justify-center font-semibold text-gray-800 px-8 py-4 rounded-xl text-base border border-surface-300 hover:bg-surface-50 transition-all">
+                    Browse Products
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

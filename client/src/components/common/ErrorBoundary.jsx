@@ -20,7 +20,7 @@ class ErrorBoundary extends Component {
         <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center">
           <div className="text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h2>
-          <p className="text-gray-500 mb-4">An error occurred while rendering this page.</p>
+          <p className="text-gray-700 mb-4">An error occurred while rendering this page.</p>
           <details className="text-left bg-red-50 border border-red-200 rounded-lg p-4 max-w-2xl w-full">
             <summary className="font-semibold text-red-700 cursor-pointer mb-2">Error Details</summary>
             <pre className="text-xs text-red-600 whitespace-pre-wrap overflow-auto">

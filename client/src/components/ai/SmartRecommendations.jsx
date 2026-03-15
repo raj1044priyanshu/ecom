@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Pagination } from 'swiper/modules';
-import { FiTrendingUp } from 'react-icons/fi';
+import { TrendingUp } from 'lucide-react';
 import axiosInstance from '../../api/axiosInstance.js';
 import ProductCard from '../product/ProductCard.jsx';
 import SkeletonCard from '../common/SkeletonCard.jsx';
@@ -38,23 +38,23 @@ const SmartRecommendations = ({ currentProductId }) => {
   }
 
   return (
-    <div className="w-full">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="bg-gradient-to-br from-purple-500 to-primary-600 p-2 rounded-lg text-white shadow-md">
-          <FiTrendingUp className="h-5 w-5" />
+    <div className="w-full mt-16 pt-16 border-t border-surface-300">
+      <div className="flex flex-col items-center text-center gap-3 mb-12">
+        <div className="bg-primary-100 p-3 rounded-2xl text-primary-600 shadow-sm border border-primary-200 mb-2">
+          <TrendingUp className="h-6 w-6" strokeWidth={2.5} />
         </div>
         <div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
             You May Also Like
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
-            {isAuthenticated ? 'Handpicked for you based on your preferences' : 'Frequently bought together'}
+          <p className="text-sm font-semibold text-gray-700 mt-2 max-w-md mx-auto">
+            {isAuthenticated ? 'Handpicked for you based on your preferences' : 'Frequently bought together with this item'}
           </p>
         </div>
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {[...Array(4)].map((_, i) => (
             <SkeletonCard key={i} />
           ))}
@@ -72,13 +72,13 @@ const SmartRecommendations = ({ currentProductId }) => {
             breakpoints={{
               640: { slidesPerView: 2.5, spaceBetween: 20 },
               768: { slidesPerView: 3, spaceBetween: 24 },
-              1024: { slidesPerView: 4, spaceBetween: 24 },
+              1024: { slidesPerView: 4, spaceBetween: 32 },
             }}
             modules={[FreeMode, Pagination]}
-            className="pb-12" // Space for pagination dots
+            className="pb-16" // Space for pagination dots
           >
             {data.recommendations.map((product) => (
-              <SwiperSlide key={product._id} className="h-auto">
+              <SwiperSlide key={product._id} className="h-auto pb-4">
                 <ProductCard product={product} />
               </SwiperSlide>
             ))}

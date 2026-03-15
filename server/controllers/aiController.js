@@ -54,7 +54,7 @@ Return ONLY a valid JSON array of product ID strings, like: ["id1","id2","id3","
 No explanation, no markdown, just the JSON array.
 `;
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
     const result = await model.generateContent(prompt);
     const text = result.response.text().trim();
 
@@ -120,73 +120,59 @@ export const getSearchSuggestions = async (req, res, next) => {
 
 export const chatSupport = async (req, res, next) => {
   try {
-    const { message, history, userOrderId } = req.body;
+    const { message, history } = req.body;
 
-    // Fetch live product catalog snapshot for context
-    const products = await Product.find({ stock: { $gt: 0 } })
-      .select('name category price discountPrice brand')
-      .limit(30)
-      .lean();
-
-    const productList = products.map(p =>
-      `- ${p.name} (${p.category}) - ₹${p.discountPrice || p.price}${p.brand ? `, by ${p.brand}` : ''}`
-    ).join('\n');
+    if (!message || !message.trim()) {
+      return res.status(400).json({ success: false, message: 'Message is required.' });
+    }
 
     const systemPrompt = `You are a friendly and professional customer support agent for "Ecom.", a modern Indian e-commerce store.
 
 Store Policies:
 - Free shipping on orders over ₹500. Orders below ₹500 have a flat ₹30 delivery charge.
 - 7-day hassle-free returns on all products.
-- Payments are accepted via UPI, debit/credit cards, and net banking.
+- Payments accepted via UPI, debit/credit cards, and net banking.
 - Orders can be cancelled within 24 hours of placing (before shipping).
 - Customers can track their orders on the "My Orders" page after logging in.
 - Customer support is available 24/7 via this chat.
 
-Current available products (for reference):
-${productList}
-
 Guidelines:
-- Be warm, concise, and helpful. Do NOT use the word "AI" at all.
-- If asked about a product not in the list, say you'll check and to visit the Products page.
-- If you can't fully answer, always offer to escalate to the support team.
+- Be warm, concise, and helpful.
 - Keep responses under 4 short sentences.
-- Do not mention that you are powered by any AI platform.`;
+- Do not mention AI or any AI platform.
+- If you cannot answer, offer to escalate to the support team.`;
 
-    const formattedHistory = [];
-
-    // Add system primer
-    formattedHistory.push({
-      role: 'user',
-      parts: [{ text: systemPrompt }]
-    });
-    formattedHistory.push({
-      role: 'model',
-      parts: [{ text: `Hello! I'm the Ecom. support team. How can I help you today? 😊` }]
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
+      generationConfig: { maxOutputTokens: 200, temperature: 0.5 },
     });
 
-    // Add real chat history
+    // Build history for the chat
+    const formattedHistory = [
+      { role: 'user', parts: [{ text: systemPrompt }] },
+      { role: 'model', parts: [{ text: "Hello! I'm the Ecom. support team. How can I help you today?" }] },
+    ];
+
     if (history && history.length > 1) {
       const chatHistory = history.slice(1, -1);
       chatHistory.forEach(msg => {
         formattedHistory.push({
           role: msg.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: msg.content }]
+          parts: [{ text: msg.content }],
         });
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const chat = model.startChat({
-      history: formattedHistory,
-      generationConfig: { maxOutputTokens: 200, temperature: 0.6 },
-    });
-
-    const result = await chat.sendMessage(message);
+    const chat = model.startChat({ history: formattedHistory });
+    const result = await chat.sendMessage(message.trim());
     const response = result.response.text();
 
     res.json({ success: true, response });
   } catch (error) {
-    console.error('Chat Error:', error);
-    res.status(500).json({ success: false, message: 'Support chat is temporarily unavailable. Please try again shortly.' });
+    console.error('Chat Error:', error?.message || error);
+    res.status(500).json({
+      success: false,
+      message: 'Support chat is temporarily unavailable. Please try again shortly.',
+    });
   }
 };

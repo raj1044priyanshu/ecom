@@ -1,84 +1,107 @@
 import { Link } from 'react-router-dom';
-import { FiTwitter, FiInstagram, FiGithub, FiMail, FiMapPin, FiPhone } from 'react-icons/fi';
+import { MapPin, Phone, Mail, Instagram, Twitter, Facebook, MoveRight } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-auto">
-      <div className="container-custom py-14">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+    <footer className="pt-20 pb-10 mt-auto bg-surface-50 border-t border-surface-300">
+      <div className="container-custom">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-16">
           
-          {/* Brand */}
-          <div className="md:col-span-1">
-            <Link to="/" className="inline-block mb-4">
-              <span className="text-2xl font-extrabold text-white">
-                Ecom<span className="text-primary-400">.</span>
+          {/* Brand & Mission */}
+          <div className="lg:col-span-2">
+            <Link to="/" className="inline-block mb-6">
+              <span className="text-3xl font-extrabold tracking-tight text-gray-900">
+                Ecom<span className="text-primary-500">.</span>
               </span>
             </Link>
-            <p className="text-sm text-gray-400 mb-5 leading-relaxed">
-              Your favourite online store. Shop thousands of products with fast delivery and easy returns.
+            <p className="text-base leading-relaxed mb-8 pr-4 text-gray-700">
+              We're redefining the online shopping experience with premium, handpicked collections. Discover quality products delivered to your door.
             </p>
-            <div className="flex space-x-3">
-              <a href="#" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
-                <FiTwitter className="h-4 w-4" />
-              </a>
-              <a href="#" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
-                <FiInstagram className="h-4 w-4" />
-              </a>
-              <a href="#" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
-                <FiGithub className="h-4 w-4" />
-              </a>
+            
+            {/* Newsletter */}
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-primary-600 mb-3">Newsletter</p>
+              <div className="flex">
+                <input 
+                  type="email" 
+                  placeholder="Your email address" 
+                  className="bg-white text-gray-900 placeholder-gray-400 px-4 py-3 rounded-l-xl text-sm w-full focus:outline-none border border-surface-300 focus:border-primary-500"
+                />
+                <button className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-3 rounded-r-xl transition-colors">
+                  <MoveRight className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Shop */}
+          {/* Links 1 */}
           <div>
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Shop</h3>
-            <ul className="space-y-3">
-              <li><Link to="/products" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">All Products</Link></li>
-              <li><Link to="/products?category=Electronics" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">Electronics</Link></li>
-              <li><Link to="/products?category=Fashion" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">Fashion</Link></li>
-              <li><Link to="/products?category=Home+%26+Kitchen" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">Home & Kitchen</Link></li>
-              <li><Link to="/products?category=Sports" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">Sports</Link></li>
+            <p className="text-sm font-bold text-gray-900 mb-6 uppercase tracking-wider">Shop</p>
+            <ul className="space-y-4">
+              {['All Products', 'New Arrivals', 'Featured', 'Electronics', 'Fashion'].map((item) => (
+                <li key={item}>
+                  <Link to={`/products${item !== 'All Products' ? '?category='+item : ''}`} className="text-sm text-gray-700 hover:text-primary-600 transition-colors">
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Account */}
+          {/* Links 2 */}
           <div>
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Account</h3>
-            <ul className="space-y-3">
-              <li><Link to="/profile" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">My Profile</Link></li>
-              <li><Link to="/orders" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">My Orders</Link></li>
-              <li><Link to="/cart" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">Shopping Cart</Link></li>
-              <li><Link to="/login" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">Login</Link></li>
-              <li><Link to="/register" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">Register</Link></li>
+            <p className="text-sm font-bold text-gray-900 mb-6 uppercase tracking-wider">Support</p>
+            <ul className="space-y-4">
+              {['FAQ', 'Shipping Policy', 'Returns', 'Track Order', 'Contact Us'].map((item) => (
+                <li key={item}>
+                  <Link to="/" className="text-sm text-gray-700 hover:text-primary-600 transition-colors">
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Contact</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-sm text-gray-400">
-                <FiMapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-primary-400" /> Mumbai, India
+            <p className="text-sm font-bold text-gray-900 mb-6 uppercase tracking-wider">Contact</p>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <MapPin className="h-5 w-5 mt-0.5 text-primary-500 flex-shrink-0" />
+                <span className="text-sm text-gray-700">123 Commerce St, Premium Avenue, City 10001</span>
               </li>
-              <li className="flex items-center gap-2 text-sm text-gray-400">
-                <FiPhone className="h-4 w-4 flex-shrink-0 text-primary-400" /> +91 98765 43210
+              <li className="flex items-center gap-3">
+                <Phone className="h-5 w-5 text-primary-500 flex-shrink-0" />
+                <span className="text-sm text-gray-700">+91 98765 43210</span>
               </li>
-              <li className="flex items-center gap-2 text-sm text-gray-400">
-                <FiMail className="h-4 w-4 flex-shrink-0 text-primary-400" /> support@ecom.in
+              <li className="flex items-center gap-3">
+                <Mail className="h-5 w-5 text-primary-500 flex-shrink-0" />
+                <span className="text-sm text-gray-700">support@ecom.in</span>
               </li>
             </ul>
+
+            <div className="flex gap-4 mt-8">
+              <a href="#" className="w-9 h-9 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-800 transition-colors">
+                <Instagram className="h-4 w-4" />
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-800 transition-colors">
+                <Twitter className="h-4 w-4" />
+              </a>
+              <a href="#" className="w-9 h-9 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-800 transition-colors">
+                <Facebook className="h-4 w-4" />
+              </a>
+            </div>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} Ecom., Inc. All rights reserved.
+        {/* Bottom */}
+        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 border-t border-surface-300">
+          <p className="text-xs text-gray-600">
+            © {new Date().getFullYear()} Ecom. All rights reserved. Built with passion.
           </p>
-          <div className="flex space-x-6 text-sm text-gray-500">
-            <Link to="/privacy" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
-            <Link to="/terms" className="hover:text-gray-300 transition-colors">Terms of Service</Link>
-            <Link to="/returns" className="hover:text-gray-300 transition-colors">Returns</Link>
+          <div className="flex gap-6">
+            <Link to="/" className="text-xs text-gray-600 hover:text-primary-600 transition-colors">Privacy Policy</Link>
+            <Link to="/" className="text-xs text-gray-600 hover:text-primary-600 transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

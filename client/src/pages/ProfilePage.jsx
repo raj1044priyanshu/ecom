@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
-import { FiUser, FiMail, FiMapPin, FiAward, FiPlus, FiTrash2, FiEdit2, FiCheck, FiX, FiPhone } from 'react-icons/fi';
+import { User, Mail, MapPin, Award, Plus, Trash2, Edit2, Check, X, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -48,77 +48,77 @@ const AddressForm = ({ existing, onSave, onCancel }) => {
   });
 
   return (
-    <form onSubmit={handleSubmit(onSave)} className="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-4 mt-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit(onSave)} className="bg-surface-50 border border-surface-300 rounded-2xl p-6 space-y-5 mt-6 shadow-inner">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {/* Label */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Label</label>
-          <select {...register('label')} className="input-field w-full text-sm">
-            <option value="Home">🏠 Home</option>
-            <option value="Office">🏢 Office</option>
-            <option value="Other">📍 Other</option>
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-800 mb-1.5 ml-1">Label</label>
+          <select {...register('label')} className="input-field w-full text-sm font-medium shadow-sm">
+            <option value="Home">Home</option>
+            <option value="Office">Office</option>
+            <option value="Other">Other</option>
           </select>
         </div>
 
         {/* Phone */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Mobile Number *</label>
-          <input {...register('phone')} type="tel" maxLength={10} placeholder="9876543210" className={`input-field w-full text-sm ${errors.phone ? 'border-red-400' : ''}`} />
-          {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-800 mb-1.5 ml-1">Mobile Number *</label>
+          <input {...register('phone')} type="tel" maxLength={10} placeholder="9876543210" className={`input-field w-full text-sm shadow-sm ${errors.phone ? 'border-red-400 ring-2 ring-red-100' : ''}`} />
+          {errors.phone && <p className="text-red-500 font-bold text-xs mt-1.5 ml-1">{errors.phone.message}</p>}
         </div>
 
         {/* Street Address */}
         <div className="sm:col-span-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Street Address *</label>
-          <input {...register('address')} placeholder="House no, Building, Street name" className={`input-field w-full text-sm ${errors.address ? 'border-red-400' : ''}`} />
-          {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address.message}</p>}
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-800 mb-1.5 ml-1">Street Address *</label>
+          <input {...register('address')} placeholder="House no, Building, Street name" className={`input-field w-full text-sm shadow-sm ${errors.address ? 'border-red-400 ring-2 ring-red-100' : ''}`} />
+          {errors.address && <p className="text-red-500 font-bold text-xs mt-1.5 ml-1">{errors.address.message}</p>}
         </div>
 
         {/* City */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">City *</label>
-          <input {...register('city')} placeholder="Mumbai" className={`input-field w-full text-sm ${errors.city ? 'border-red-400' : ''}`} />
-          {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>}
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-800 mb-1.5 ml-1">City *</label>
+          <input {...register('city')} placeholder="Mumbai" className={`input-field w-full text-sm shadow-sm ${errors.city ? 'border-red-400 ring-2 ring-red-100' : ''}`} />
+          {errors.city && <p className="text-red-500 font-bold text-xs mt-1.5 ml-1">{errors.city.message}</p>}
         </div>
 
         {/* State */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">State *</label>
-          <select {...register('state')} className={`input-field w-full text-sm ${errors.state ? 'border-red-400' : ''}`}>
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-800 mb-1.5 ml-1">State *</label>
+          <select {...register('state')} className={`input-field w-full text-sm font-medium shadow-sm ${errors.state ? 'border-red-400 ring-2 ring-red-100' : ''}`}>
             <option value="">Select State...</option>
             {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
-          {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state.message}</p>}
+          {errors.state && <p className="text-red-500 font-bold text-xs mt-1.5 ml-1">{errors.state.message}</p>}
         </div>
 
         {/* Pincode */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Pincode *</label>
-          <input {...register('postalCode')} type="text" maxLength={6} placeholder="400001" className={`input-field w-full text-sm ${errors.postalCode ? 'border-red-400' : ''}`} />
-          {errors.postalCode && <p className="text-red-500 text-xs mt-1">{errors.postalCode.message}</p>}
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-800 mb-1.5 ml-1">Pincode *</label>
+          <input {...register('postalCode')} type="text" maxLength={6} placeholder="400001" className={`input-field w-full text-sm shadow-sm ${errors.postalCode ? 'border-red-400 ring-2 ring-red-100' : ''}`} />
+          {errors.postalCode && <p className="text-red-500 font-bold text-xs mt-1.5 ml-1">{errors.postalCode.message}</p>}
         </div>
 
         {/* Country */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Country</label>
-          <input {...register('country')} readOnly className="input-field w-full text-sm bg-gray-100 cursor-not-allowed" />
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-800 mb-1.5 ml-1">Country</label>
+          <input {...register('country')} readOnly className="input-field w-full text-sm bg-surface-100 cursor-not-allowed font-bold text-gray-600" />
         </div>
 
         {/* Default checkbox */}
-        <div className="sm:col-span-2 flex items-center gap-2">
-          <input type="checkbox" id="isDefault" {...register('isDefault')} className="w-4 h-4 text-primary-600 accent-primary-600" />
-          <label htmlFor="isDefault" className="text-sm text-gray-600">Set as default address</label>
+        <div className="sm:col-span-2 flex items-center gap-3 bg-white p-3 rounded-xl border border-surface-300">
+          <input type="checkbox" id="isDefault" {...register('isDefault')} className="w-5 h-5 text-primary-600 accent-primary-600 rounded cursor-pointer" />
+          <label htmlFor="isDefault" className="text-sm font-bold text-gray-800 cursor-pointer">Set as default address</label>
         </div>
       </div>
 
-      <div className="flex gap-3 pt-2">
+      <div className="flex gap-3 pt-4 border-t border-surface-300 mt-6">
         <button type="submit" disabled={isSubmitting}
-          className="btn-primary flex items-center gap-2 px-5 py-2 text-sm">
-          <FiCheck /> {isSubmitting ? 'Saving...' : 'Save Address'}
+          className="btn-primary flex items-center justify-center gap-2 px-6 py-2.5 text-sm w-full sm:w-auto shadow-md shadow-primary-500/20">
+          <Check className="h-4 w-4" strokeWidth={3} /> {isSubmitting ? 'Saving...' : 'Save Address'}
         </button>
         <button type="button" onClick={onCancel}
-          className="btn flex items-center gap-2 px-5 py-2 text-sm bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg">
-          <FiX /> Cancel
+          className="btn-secondary flex items-center justify-center gap-2 px-6 py-2.5 text-sm w-full sm:w-auto hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors">
+          <X className="h-4 w-4" strokeWidth={3} /> Cancel
         </button>
       </div>
     </form>
@@ -168,43 +168,43 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
+    <div className="section-cream min-h-screen py-12">
       <Helmet><title>My Profile | Ecom.</title></Helmet>
 
-      <div className="container-custom max-w-4xl">
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-8">My Profile</h1>
+      <div className="container-custom max-w-5xl">
+        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-8">My Profile</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* Profile Card Sidebar */}
           <div className="md:col-span-1">
-            <div className="card p-6 text-center border-t-4 border-t-primary-500">
-              <div className="relative inline-block mb-4">
+            <div className="card p-8 text-center border-t-[6px] border-t-primary-500 rounded-[2rem] shadow-xl shadow-surface-200/50">
+              <div className="relative inline-block mb-6">
                 {user?.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mx-auto" />
+                  <img src={user.avatar} alt={user.name} className="w-28 h-28 rounded-[2rem] object-cover border-[6px] border-white shadow-lg mx-auto bg-surface-50" />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-3xl mx-auto border-4 border-white shadow-lg">
+                  <div className="w-28 h-28 rounded-[2rem] bg-primary-50 flex items-center justify-center text-primary-600 font-black text-4xl mx-auto border-[6px] border-white shadow-lg">
                     {user?.name?.charAt(0) || 'U'}
                   </div>
                 )}
                 {user?.isVerified && (
-                  <div className="absolute bottom-0 right-0 bg-green-500 text-white p-1 rounded-full border-2 border-white shadow-sm" title="Verified Account">
-                    <FiAward className="h-4 w-4" />
+                  <div className="absolute -bottom-2 -right-2 bg-primary-500 text-white p-2 rounded-xl border-[3px] border-white shadow-sm" title="Verified Account">
+                    <Award className="h-5 w-5" strokeWidth={2.5} />
                   </div>
                 )}
               </div>
               
-              <h2 className="text-xl font-bold text-gray-900">{user?.name}</h2>
-              <p className="text-sm text-gray-500 mt-1 capitalize font-medium">{user?.role} Account</p>
+              <h2 className="text-2xl font-black text-gray-900 leading-tight">{user?.name}</h2>
+              <p className="text-xs font-bold text-primary-600 mt-2 uppercase tracking-widest bg-primary-50 inline-block px-3 py-1 rounded-lg">{user?.role} Account</p>
               
-              <div className="mt-6 border-t border-gray-100 pt-6 space-y-3 text-sm">
-                <div className="flex items-center text-gray-600 bg-gray-50 p-2 border border-gray-100 rounded-lg">
-                  <FiMail className="mr-3 text-gray-400 flex-shrink-0" />
+              <div className="mt-8 border-t border-surface-300 pt-6 space-y-3 text-sm">
+                <div className="flex items-center text-gray-800 bg-surface-50 p-3 border border-surface-300 rounded-xl font-medium shadow-sm">
+                  <Mail className="mr-3 text-primary-500 flex-shrink-0 h-5 w-5" strokeWidth={2} />
                   <span className="truncate">{user?.email}</span>
                 </div>
                 {user?.phone && (
-                  <div className="flex items-center text-gray-600 bg-gray-50 p-2 border border-gray-100 rounded-lg">
-                    <FiPhone className="mr-3 text-gray-400 flex-shrink-0" />
+                  <div className="flex items-center text-gray-800 bg-surface-50 p-3 border border-surface-300 rounded-xl font-medium shadow-sm">
+                    <Phone className="mr-3 text-primary-500 flex-shrink-0 h-5 w-5" strokeWidth={2} />
                     <span>{user.phone}</span>
                   </div>
                 )}
@@ -216,31 +216,34 @@ const ProfilePage = () => {
           <div className="md:col-span-2 space-y-8">
             
             {/* Account Settings */}
-            <div className="card p-6 sm:p-8">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-gray-900 border-b-2 border-primary-500 pb-1 inline-block">Account Settings</h3>
+            <div className="card p-6 sm:p-8 rounded-[2rem] shadow-sm">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-xl font-black text-gray-900 flex items-center">
+                  <User className="mr-2 h-6 w-6 text-primary-500" strokeWidth={2.5} />
+                  Account Settings
+                </h3>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Full Name</label>
-                  <p className="text-base font-medium text-gray-900 bg-gray-50 p-3 rounded-lg border border-gray-200">{user?.name}</p>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5 ml-1">Full Name</label>
+                  <p className="text-base font-bold text-gray-900 bg-surface-50 p-3.5 rounded-xl border border-surface-300 shadow-inner">{user?.name}</p>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Email Address</label>
-                  <p className="text-base font-medium text-gray-900 bg-gray-50 p-3 rounded-lg border border-gray-200">{user?.email}</p>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5 ml-1">Email Address</label>
+                  <p className="text-base font-bold text-gray-900 bg-surface-50 p-3.5 rounded-xl border border-surface-300 shadow-inner">{user?.email}</p>
                 </div>
               </div>
 
               {!user?.isVerified && (
-                <div className="mt-6 p-4 bg-yellow-50 rounded-xl border border-yellow-200 flex justify-between items-center">
+                <div className="mt-8 p-5 bg-amber-50 rounded-2xl border border-amber-200 flex flex-col sm:flex-row gap-4 justify-between items-center">
                   <div>
-                    <p className="text-sm font-bold text-yellow-800">Email Verification Required</p>
-                    <p className="text-sm text-yellow-700 mt-1">Please verify your email to access all features.</p>
+                    <p className="text-base font-black text-amber-900">Email Verification Required</p>
+                    <p className="text-sm font-medium text-amber-700 mt-1">Please verify your email to access all features.</p>
                   </div>
                   <button 
                     onClick={() => navigate('/verify-otp', { state: { email: user?.email } })}
-                    className="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-bold shadow-sm hover:bg-yellow-200"
+                    className="px-6 py-2.5 bg-amber-500 text-white rounded-xl text-sm font-bold shadow-md shadow-amber-500/20 hover:bg-amber-600 transition-colors whitespace-nowrap"
                   >
                     Verify Now
                   </button>
@@ -249,43 +252,45 @@ const ProfilePage = () => {
             </div>
 
             {/* Saved Addresses */}
-            <div className="card p-6 sm:p-8">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-gray-900 border-b-2 border-primary-500 pb-1 flex items-center">
-                  <FiMapPin className="mr-2 text-primary-600" />
+            <div className="card p-6 sm:p-8 rounded-[2rem] shadow-sm">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-xl font-black text-gray-900 flex items-center">
+                  <MapPin className="mr-2 h-6 w-6 text-primary-500" strokeWidth={2.5} />
                   Saved Addresses
                 </h3>
                 {!showForm && (
                   <button onClick={handleAddNew}
-                    className="flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-800 transition-colors">
-                    <FiPlus /> Add New
+                    className="flex items-center gap-1.5 text-sm font-bold text-primary-700 hover:text-white bg-primary-100 hover:bg-primary-600 px-4 py-2 rounded-xl transition-colors shadow-sm">
+                    <Plus strokeWidth={3} className="h-4 w-4" /> Add New
                   </button>
                 )}
               </div>
 
               {user?.addresses?.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {user.addresses.map((addr) => (
-                    <div key={addr._id} className={`border rounded-xl p-4 bg-white relative group transition-all ${addr.isDefault ? 'border-primary-400 shadow-sm' : 'border-gray-200 hover:border-primary-300'}`}>
+                    <div key={addr._id} className={`border-2 rounded-[1.5rem] p-5 bg-white relative group transition-all ${addr.isDefault ? 'border-primary-500 shadow-md shadow-primary-500/10' : 'border-surface-300 hover:border-primary-300'}`}>
                       {addr.isDefault && (
-                        <span className="absolute top-2 right-2 bg-primary-100 text-primary-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Default</span>
+                        <span className="absolute top-4 right-4 bg-primary-100 text-primary-700 text-[10px] uppercase font-bold px-2.5 py-1 rounded-lg">Default</span>
                       )}
-                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{addr.label}</p>
-                      <address className="not-italic text-sm text-gray-600">
-                        <span className="font-semibold text-gray-900 block mb-1">{user.name}</span>
+                      <p className="text-xs font-black text-gray-600 uppercase tracking-widest mb-3 bg-surface-100 inline-block px-2.5 py-1 rounded-lg">{addr.label}</p>
+                      <address className="not-italic text-sm text-gray-800 font-medium leading-relaxed">
+                        <span className="font-extrabold text-gray-900 block mb-1.5 text-base">{user.name}</span>
                         {addr.address}<br />
                         {addr.city}, {addr.state} - {addr.postalCode}<br />
-                        {addr.country}<br />
-                        <span className="text-gray-500">📞 {addr.phone}</span>
+                        <span className="font-bold text-gray-600 block mt-1">{addr.country}</span>
+                        <div className="flex items-center mt-3 text-gray-800 font-bold bg-surface-50 py-1.5 px-3 rounded-lg border border-surface-300 w-fit">
+                          <Phone className="h-3 w-3 mr-2 text-primary-500" /> {addr.phone}
+                        </div>
                       </address>
-                      <div className="flex gap-2 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onClick={() => handleEditAddress(addr)}
-                          className="flex items-center gap-1 text-xs text-primary-600 hover:text-primary-800 bg-primary-50 px-3 py-1 rounded-lg font-medium">
-                          <FiEdit2 className="h-3 w-3" /> Edit
+                          className="flex items-center gap-1.5 text-xs text-primary-700 hover:text-white bg-primary-50 hover:bg-primary-600 px-4 py-2 rounded-lg font-bold border border-primary-100 transition-colors">
+                          <Edit2 className="h-3 w-3" strokeWidth={3} /> Edit
                         </button>
                         <button onClick={() => handleDeleteAddress(addr._id)}
-                          className="flex items-center gap-1 text-xs text-red-600 hover:text-red-800 bg-red-50 px-3 py-1 rounded-lg font-medium">
-                          <FiTrash2 className="h-3 w-3" /> Remove
+                          className="flex items-center gap-1.5 text-xs text-red-600 hover:text-white bg-red-50 hover:bg-red-600 px-4 py-2 rounded-lg font-bold border border-red-100 transition-colors">
+                          <Trash2 className="h-3 w-3" strokeWidth={3} /> Remove
                         </button>
                       </div>
                     </div>
@@ -293,12 +298,15 @@ const ProfilePage = () => {
                 </div>
               ) : (
                 !showForm && (
-                  <div className="text-center py-8 bg-gray-50 rounded-xl border border-gray-200 border-dashed">
-                    <FiMapPin className="mx-auto text-3xl text-gray-300 mb-2" />
-                    <p className="text-sm text-gray-500">No saved addresses yet.</p>
+                  <div className="text-center py-12 bg-surface-50 rounded-[2rem] border-2 border-surface-300 border-dashed">
+                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 border border-surface-300 shadow-sm">
+                      <MapPin className="h-8 w-8 text-surface-300" strokeWidth={2} />
+                    </div>
+                    <p className="text-base font-bold text-gray-900">No saved addresses</p>
+                    <p className="text-sm text-gray-700 font-medium mb-4 mt-1">Add an address for faster checkout.</p>
                     <button onClick={handleAddNew}
-                      className="mt-3 text-sm font-medium text-primary-600 hover:underline">
-                      + Add your first address
+                      className="btn-primary text-sm px-6 py-2">
+                       Add Address
                     </button>
                   </div>
                 )

@@ -2,7 +2,7 @@ import Product from '../models/Product.js';
 import Review from '../models/Review.js';
 import { getCache, setCache, flushCache } from '../utils/cache.js';
 import { deleteFromCloudinary } from '../middleware/uploadMiddleware.js';
-import { getSemanticSearchTerms } from '../utils/aiSearch.js';
+
 
 // @desc    Get all products with filtering, sorting, pagination
 export const getProducts = async (req, res, next) => {
@@ -15,9 +15,7 @@ export const getProducts = async (req, res, next) => {
 
     const query = {};
     if (keyword) {
-      // AI Semantic Search Expansion
-      const semanticTerms = await getSemanticSearchTerms(keyword);
-      const searchRegex = new RegExp([keyword, ...semanticTerms].join('|'), 'i');
+      const searchRegex = new RegExp(keyword, 'i');
       query.$or = [
         { name: { $regex: searchRegex } },
         { category: { $regex: searchRegex } },
