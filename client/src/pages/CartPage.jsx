@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Trash2, Minus, Plus, ArrowRight, ShoppingCart, ShieldCheck, Zap } from 'lucide-react';
@@ -11,6 +12,9 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleUpdateQuantity = (productId, newQuantity, stock) => {
     if (newQuantity > 0 && newQuantity <= stock) {
       dispatch(updateCartItem({ productId, quantity: newQuantity }));
@@ -21,9 +25,13 @@ const CartPage = () => {
     dispatch(removeFromCart(productId));
   };
 
-  const handleClearCart = () => {
-    if (window.confirm('Are you sure you want to clear your cart?')) {
-      dispatch(clearCart());
+  const handleClearCart = async () => {
+    setIsSubmitting(true);
+    setIsConfirmModalOpen(false);
+    try {
+      await dispatch(clearCart()).unwrap();
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -55,7 +63,12 @@ const CartPage = () => {
 
   return (
     <ErrorBoundary>
-    <div className="section-cream min-h-screen py-8 sm:py-12">
+    <div className="section-cream min-h-screen py-8 sm:py-12 relative">
+      {isSubmitting && (
+        <div className="fixed inset-0 z-[200] bg-white/60 backdrop-blur-sm flex items-center justify-center">
+          <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
+        </div>
+      )}
       <Helmet>
         <title>{`Shopping Cart (${items.length}) | Ecom.`}</title>
       </Helmet>
@@ -138,7 +151,7 @@ const CartPage = () => {
               </ul>
               <div className="bg-surface-50 px-4 py-4 sm:px-6 border-t border-surface-300 flex justify-end">
                  <button 
-                  onClick={handleClearCart}
+                  onClick={() => setIsConfirmModalOpen(true)}
                   className="text-sm font-bold text-gray-700 hover:text-gray-800 transition-colors underline underline-offset-4"
                 >
                   Clear entire cart
@@ -206,6 +219,35 @@ const CartPage = () => {
 
         </div>
       </div>
+
+      {/* Custom Confirmation Modal */}
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 z-[210] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl animate-in fade-in zoom-in duration-200">
+            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center mb-6">
+              <Trash2 className="h-8 w-8" />
+            </div>
+            <h2 className="text-2xl font-black text-gray-900 mb-2 tracking-tight">Clear Cart?</h2>
+            <p className="text-gray-700 font-medium mb-8">Are you sure you want to remove all items from your shopping cart? This action cannot be undone.</p>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setIsConfirmModalOpen(false)}
+                className="flex-1 px-6 py-4 rounded-2xl bg-surface-100 text-gray-900 font-black hover:bg-surface-200 transition-colors"
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleClearCart}
+                className="flex-1 px-6 py-4 rounded-2xl bg-red-600 text-white font-black shadow-lg shadow-red-500/30 hover:bg-red-700 transition-colors"
+                disabled={isSubmitting}
+              >
+                Clear All
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
     </ErrorBoundary>
   );

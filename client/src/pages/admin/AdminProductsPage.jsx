@@ -16,9 +16,10 @@ const SAMPLE_JSON = `[
     "category": "Electronics",
     "brand": "BrandName",
     "stock": 50,
-    "description": "Product description here",
-    "tags": "tag1;tag2;tag3",
-    "isFeatured": true
+    "description": "Premium wireless headphones with noise cancellation",
+    "tags": "electronics;audio;wireless",
+    "isFeatured": true,
+    "images": ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e"]
   }
 ]`;
 
@@ -91,7 +92,7 @@ const BulkImportPanel = ({ onSuccess }) => {
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <h2 className="text-base font-bold text-gray-900">Bulk Import Products</h2>
-            <p className="text-xs text-gray-700 mt-0.5">Upload CSV or paste JSON to add multiple products at once</p>
+            <p className="text-xs text-gray-700 mt-0.5">Upload CSV (comma separated) or paste JSON to add multiple products. Supports image URLs using "images" field (split by ; in CSV).</p>
           </div>
           <div className="flex gap-2">
             <button

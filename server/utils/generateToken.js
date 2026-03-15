@@ -14,10 +14,17 @@ export const generateTokens = (userId) => {
 
 export const setTokenCookies = (res, accessToken, refreshToken) => {
   const isProduction = process.env.NODE_ENV === 'production';
+  const clientUrl = process.env.CLIENT_URL || '';
+  
+  // Decide cookie options based on whether we're in production and if it's cross-origin
+  const isCrossOrigin = clientUrl.includes('vercel.app') || clientUrl.includes('render.com');
+  
   const cookieOptions = {
     httpOnly: true,
-    secure: isProduction, // Only true on HTTPS (production)
-    sameSite: isProduction ? 'none' : 'lax', // 'none' requires HTTPS/secure
+    // Use SameSite=None and Secure=true if in production OR if it's definitely cross-origin
+    // Note: SameSite=None REQUIRES Secure=true, and Secure=true REQUIRES HTTPS.
+    secure: isProduction || isCrossOrigin,
+    sameSite: (isProduction || isCrossOrigin) ? 'none' : 'lax',
   };
 
   res.cookie('accessToken', accessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });

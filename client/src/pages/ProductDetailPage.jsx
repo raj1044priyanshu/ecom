@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { format } from 'date-fns';
-import { Minus, Plus, ShoppingCart, Star, StarHalf } from 'lucide-react';
+import { Minus, Plus, ShoppingCart, Star, StarHalf, X } from 'lucide-react';
 import StarRatings from 'react-star-ratings';
 import InnerImageZoom from 'react-inner-image-zoom';
 import 'react-inner-image-zoom/lib/styles.min.css';
@@ -14,14 +14,18 @@ import { addToCart } from '../features/cart/cartSlice.js';
 import Spinner from '../components/common/Spinner.jsx';
 import SmartRecommendations from '../components/ai/SmartRecommendations.jsx';
 import { formatCurrency } from '../utils/formatCurrency.js';
+import ReviewModal from '../components/product/ReviewModal.jsx';
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  const [selectedReviewImage, setSelectedReviewImage] = useState(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   // Scroll to top on mount or when slug changes
   useEffect(() => {
@@ -264,6 +268,14 @@ const ProductDetailPage = () => {
             <div className="bg-gray-900 text-white px-3 py-1 rounded-xl text-sm font-bold shadow-md">
               {reviewsData?.length || 0}
             </div>
+            
+            <button 
+              onClick={() => setIsReviewModalOpen(true)}
+              className="ml-auto flex items-center gap-2 text-sm font-black text-primary-600 hover:text-primary-700 bg-primary-50 px-5 py-2.5 rounded-2xl border border-primary-100 transition-all hover:shadow-md hover:scale-105"
+            >
+              <Star className="h-4 w-4" fill="currentColor" />
+              Write a Review
+            </button>
           </div>
           
           {!reviewsData || reviewsData.length === 0 ? (
@@ -304,12 +316,60 @@ const ProductDetailPage = () => {
                   <p className="text-gray-800 font-medium leading-relaxed bg-surface-50 p-5 rounded-[1.5rem] border border-surface-300">
                     "{review.comment}"
                   </p>
+                  
+                  {review.images && review.images.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {review.images.map((img, idx) => (
+                        <button 
+                          key={img.public_id || idx}
+                          onClick={() => setSelectedReviewImage(img.url)}
+                          className="w-16 h-16 rounded-xl overflow-hidden border border-surface-300 hover:border-primary-400 transition-colors shadow-sm"
+                        >
+                          <img src={img.url} alt="Review" className="w-full h-full object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           )}
         </div>
       </div>
+
+      {/* Review Image Lightbox */}
+      {selectedReviewImage && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setSelectedReviewImage(null)}
+        >
+          <div className="relative max-w-4xl max-height-[90vh] bg-white rounded-[2rem] overflow-hidden shadow-2xl">
+            <button 
+              className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+              onClick={() => setSelectedReviewImage(null)}
+            >
+              <X className="h-6 w-6" />
+            </button>
+            <img 
+              src={selectedReviewImage} 
+              alt="Review Full Size" 
+              className="max-w-full max-h-[85vh] object-contain"
+            />
+          </div>
+        </div>
+      )}
+
+      {productData && (
+        <ReviewModal
+          product={productData}
+          isOpen={isReviewModalOpen}
+          onClose={() => setIsReviewModalOpen(false)}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ['product', slug] });
+            queryClient.invalidateQueries({ queryKey: ['reviews', productData._id] });
+          }}
+        />
+      )}
     </div>
   );
 };

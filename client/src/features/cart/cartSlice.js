@@ -42,8 +42,9 @@ export const removeFromCart = createAsyncThunk('cart/remove', async (productId, 
 
 export const clearCart = createAsyncThunk('cart/clear', async (_, { rejectWithValue }) => {
   try {
-    await axiosInstance.delete('/cart/clear');
-    return { items: [], totalPrice: 0 };
+    const { data } = await axiosInstance.delete('/cart/clear');
+    toast.success('Cart cleared');
+    return data.cart || { items: [], totalPrice: 0 };
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || 'Failed to clear cart');
   }
@@ -64,8 +65,9 @@ const cartSlice = createSlice({
     // Shared handler for all successful cart updates
     const handleCartUpdate = (state, action) => {
       state.isLoading = false;
-      state.items = action.payload.items || [];
-      state.totalPrice = action.payload.totalPrice || 0;
+      const cart = action.payload || {};
+      state.items = cart.items || [];
+      state.totalPrice = cart.totalPrice || 0;
     };
 
     builder

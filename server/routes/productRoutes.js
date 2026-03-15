@@ -22,6 +22,6 @@ router.delete('/:id', protect, authorize('admin'), deleteProduct);
 router.post('/bulk-csv', protect, authorize('admin'), uploadCSV.single('file'), bulkImportCSV);
 router.post('/bulk-json', protect, authorize('admin'), bulkImportJSON);
 
-router.post('/:id/reviews', protect, createReview);
+router.post('/:id/reviews', protect, upload.array('images', 3), uploadToCloudinary, createReview);
 
 export default router;

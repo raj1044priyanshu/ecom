@@ -4,7 +4,7 @@ import Product from '../models/Product.js';
 // @desc    Get cart
 export const getCart = async (req, res, next) => {
   try {
-    const cart = await Cart.findOne({ user: req.user._id }).populate('items.product', 'name images price stock');
+    const cart = await Cart.findOne({ user: req.user._id }).populate('items.product', 'name images price stock slug');
     if (!cart) return res.status(200).json({ success: true, cart: { items: [], totalPrice: 0 } });
     res.status(200).json({ success: true, cart });
   } catch (error) {
@@ -34,7 +34,7 @@ export const addToCart = async (req, res, next) => {
     }
 
     await cart.save();
-    await cart.populate('items.product', 'name images price stock');
+    await cart.populate('items.product', 'name images price stock slug');
     res.status(200).json({ success: true, cart });
   } catch (error) {
     next(error);
@@ -58,7 +58,7 @@ export const updateCartItem = async (req, res, next) => {
     }
 
     await cart.save();
-    await cart.populate('items.product', 'name images price stock');
+    await cart.populate('items.product', 'name images price stock slug');
     res.status(200).json({ success: true, cart });
   } catch (error) {
     next(error);
@@ -82,8 +82,12 @@ export const removeFromCart = async (req, res, next) => {
 // @desc    Clear cart
 export const clearCart = async (req, res, next) => {
   try {
-    await Cart.findOneAndUpdate({ user: req.user._id }, { items: [], totalPrice: 0 });
-    res.status(200).json({ success: true, message: 'Cart cleared.' });
+    const cart = await Cart.findOne({ user: req.user._id });
+    if (cart) {
+      cart.items = [];
+      await cart.save();
+    }
+    res.status(200).json({ success: true, message: 'Cart cleared.', cart: cart || { items: [], totalPrice: 0 } });
   } catch (error) {
     next(error);
   }

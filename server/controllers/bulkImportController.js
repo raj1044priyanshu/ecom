@@ -3,7 +3,7 @@ import slugify from 'slugify';
 import Product from '../models/Product.js';
 import { flushCache } from '../utils/cache.js';
 
-const CSV_COLUMNS = ['name', 'price', 'discountPrice', 'category', 'brand', 'stock', 'description', 'tags', 'isFeatured'];
+const CSV_COLUMNS = ['name', 'price', 'discountPrice', 'category', 'brand', 'stock', 'description', 'tags', 'isFeatured', 'images'];
 
 /**
  * Map a raw CSV row object to a Product-ready object.
@@ -29,7 +29,9 @@ const mapRowToProduct = (row, index, sellerId) => {
       description: typeof row.description === 'string' ? row.description.trim() : (row.description ? String(row.description) : ''),
       tags: typeof row.tags === 'string' ? row.tags.split(';').map((t) => t.trim()).filter(Boolean) : (Array.isArray(row.tags) ? row.tags : []),
       isFeatured: row.isFeatured === true || String(row.isFeatured).toLowerCase() === 'true',
-      images: [],
+      images: typeof row.images === 'string' 
+        ? row.images.split(';').map(url => ({ url: url.trim(), public_id: 'external' })).filter(img => img.url)
+        : (Array.isArray(row.images) ? row.images.map(url => typeof url === 'string' ? ({ url, public_id: 'external' }) : url) : []),
       seller: sellerId,
     },
   };

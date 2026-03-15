@@ -3,11 +3,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
 import { format } from 'date-fns';
 import { Link, useLocation } from 'react-router-dom';
-import { Package, Truck, CheckCircle, Clock, ChevronDown, ChevronUp, XCircle, TrendingUp } from 'lucide-react';
+import { Package, Truck, CheckCircle, Clock, ChevronDown, ChevronUp, XCircle, TrendingUp, Star } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import axiosInstance from '../api/axiosInstance.js';
 import Spinner from '../components/common/Spinner.jsx';
 import { formatCurrency } from '../utils/formatCurrency.js';
+import ReviewModal from '../components/product/ReviewModal.jsx';
 
 const OrderStatusIcon = ({ status }) => {
   switch (status) {
@@ -105,6 +106,8 @@ const OrderTracker = ({ status, date }) => {
 
 const OrdersPage = () => {
   const [expandedOrders, setExpandedOrders] = useState(new Set());
+  const [reviewProduct, setReviewProduct] = useState(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const location = useLocation();
   const queryClient = useQueryClient();
   const isNewOrder = location.state?.newOrder;
@@ -222,6 +225,18 @@ const OrdersPage = () => {
                       </div>
                       <div className="col-span-2 md:col-span-2 flex items-center justify-end sm:justify-start gap-4">
                         <OrderStatusBadge status={order.orderStatus} />
+                        {order.orderStatus === 'Delivered' && !expandedOrders.has(order._id) && (
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleOrderExpand(order._id);
+                            }}
+                            className="hidden md:flex items-center gap-2 bg-primary-600 text-white px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary-500/30 hover:bg-primary-700 transition-all transform hover:scale-105"
+                          >
+                            <Star className="h-3 w-3" fill="currentColor" />
+                            Rate Items
+                          </button>
+                        )}
                       </div>
                     </div>
                     <div className="text-gray-700 p-2 ml-4 flex gap-2 bg-white rounded-xl border border-surface-300 shadow-sm">
@@ -289,7 +304,20 @@ const OrdersPage = () => {
                                   </h5>
                                   <p className="text-base font-black text-gray-900 ml-4 bg-surface-50 px-3 py-1.5 rounded-xl border border-surface-300 shadow-sm whitespace-nowrap">{formatCurrency(item.price)}</p>
                                 </div>
-                                <p className="mt-2 text-xs font-bold text-gray-700 uppercase tracking-wider">Qty: {item.quantity}</p>
+                                <div className="flex items-center justify-between mt-2">
+                                  <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">Qty: {item.quantity}</p>
+                                  {order.orderStatus === 'Delivered' && (
+                                    <button 
+                                      onClick={() => {
+                                        setReviewProduct({ id: item.product, name: item.name });
+                                        setIsReviewModalOpen(true);
+                                      }}
+                                      className="text-xs font-black text-primary-600 hover:text-primary-700 bg-primary-50 px-3 py-1.5 rounded-lg border border-primary-100 transition-colors"
+                                    >
+                                      Rate Product
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             </li>
                           ))}
@@ -353,6 +381,15 @@ const OrdersPage = () => {
           </div>
         )}
       </div>
+      
+      {reviewProduct && (
+        <ReviewModal
+          product={reviewProduct}
+          isOpen={isReviewModalOpen}
+          onClose={() => setIsReviewModalOpen(false)}
+          onSuccess={() => queryClient.invalidateQueries({ queryKey: ['myOrders'] })}
+        />
+      )}
     </div>
   );
 };

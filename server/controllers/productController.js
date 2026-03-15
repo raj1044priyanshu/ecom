@@ -139,18 +139,33 @@ export const createReview = async (req, res, next) => {
     if (!product) return res.status(404).json({ success: false, message: 'Product not found.' });
 
     const existingReview = await Review.findOne({ product: req.params.id, user: req.user._id });
+    const images = req.cloudinaryFiles || [];
+
     if (existingReview) {
+      // Delete old images from Cloudinary
+      if (existingReview.images && existingReview.images.length > 0) {
+        for (const img of existingReview.images) {
+          await deleteFromCloudinary(img.public_id);
+        }
+      }
       existingReview.rating = rating;
       existingReview.comment = comment;
+      existingReview.images = images;
       await existingReview.save();
     } else {
-      await Review.create({ product: req.params.id, user: req.user._id, rating, comment });
+      await Review.create({
+        product: req.params.id,
+        user: req.user._id,
+        rating,
+        comment,
+        images,
+      });
     }
 
     // Recalculate rating
     const reviews = await Review.find({ product: req.params.id });
     product.numOfReviews = reviews.length;
-    product.ratings = reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length;
+    product.ratings = reviews.length > 0 ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length : 0;
     await product.save({ validateBeforeSave: false });
 
     res.status(201).json({ success: true, message: 'Review submitted.' });
